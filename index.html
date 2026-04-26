@@ -5,60 +5,635 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wedding Bingo</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #fdfaf0; color: #333; margin: 0; padding: 20px; }
-        h1 { font-size: 1.5rem; color: #d4a373; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 400px; margin: 20px auto; }
-        .cell { background: #fff; border: 2px solid #d4a373; border-radius: 8px; aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; cursor: pointer; font-size: 0.75rem; overflow: hidden; }
-        .cell.active { background: #faedcd; border-color: #bc6c25; }
-        .name-display { font-weight: bold; color: #bc6c25; margin-top: 5px; font-size: 0.8rem; word-break: break-all; }
-        #bingo-msg { display: none; font-size: 2rem; font-weight: bold; color: #e63946; margin-top: 20px; animation: bounce 0.5s infinite alternate; }
-        @keyframes bounce { from { transform: scale(1); } to { transform: scale(1.1); } }
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-red: #d63031;
+            --primary-pink: #fd79a8;
+            --accent-yellow: #fdcb6e;
+            --bg-gradient: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            --text-color: #333;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--primary-red);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #636e72;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .cell {
+            background: #fff;
+            border: 3px solid var(--primary-pink);
+            border-radius: 15px;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .cell.active {
+            background: linear-gradient(45deg, var(--accent-yellow), #ffeaa7);
+            border-color: #e17055;
+            color: #2d3436;
+        }
+
+        .cell#free-cell {
+            background: linear-gradient(45deg, var(--primary-pink), var(--accent-yellow));
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .cell#free-cell::before {
+            content: "💖";
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .cell#free-cell .name-display {
+            color: white;
+        }
+
+        .name-display {
+            font-weight: bold;
+            color: #e17055;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        #bingo-msg {
+            display: none;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #e84393;
+            font-family: 'Dancing Script', cursive;
+            margin-top: 30px;
+            animation: bounce 0.5s infinite alternate;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .grid { max-width: 90%; gap: 10px; }
+            .cell { font-size: 0.7rem; padding: 8px; }
+            .name-display { font-size: 0.8rem; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            p { font-size: 1rem; margin-bottom: 20px; }
+            .grid { max-width: 95%; gap: 8px; }
+            .cell { font-size: 0.6rem; padding: 5px; border-radius: 10px; }
+            .cell#free-cell::before { font-size: 1.5rem; margin-bottom: 3px; }
+            .name-display { font-size: 0.7rem; margin-top: 5px; }
+            #bingo-msg { font-size: 2rem; margin-top: 20px; }
+        }
+
+        @media (max-width: 360px) {
+            h1 { font-size: 1.5rem; }
+            p { font-size: 0.9rem; margin-bottom: 15px; }
+            .grid { max-width: 100%; gap: 5px; }
+            .cell { font-size: 0.55rem; padding: 3px; }
+            .name-display { font-size: 0.65rem; margin-top: 3px; }
+            #bingo-msg { font-size: 1.5rem; margin-top: 15px; }
+        }
+
+        @media (min-width: 1000px) {
+            body { padding: 40px; }
+            h1 { font-size: 4rem; margin-bottom: 20px; }
+            p { font-size: 1.5rem; margin-bottom: 40px; }
+            .grid { max-width: 600px; gap: 20px; }
+            .cell { font-size: 1rem; padding: 15px; border-radius: 20px; }
+            .cell#free-cell::before { font-size: 2.5rem; margin-bottom: 8px; }
+            .name-display { font-size: 1rem; margin-top: 10px; }
+            #bingo-msg { font-size: 4rem; margin-top: 40px; }
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .close-modal:hover {
+            color: #000;
+        }
+
+        #modal-title {
+            font-family: 'Roboto', sans-serif;
+            color: var(--primary-red);
+            margin-bottom: 20px;
+        }
+
+        #name-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--primary-pink);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        #submit-name {
+            background: linear-gradient(45deg, var(--primary-pink), var(--accent-yellow));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #submit-name:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Admin button styles */
+        #admin-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #dfe6e9;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #2d3436;
+            transition: all 0.2s ease;
+            z-index: 500;
+        }
+
+        #admin-btn:hover {
+            background: #b2bec3;
+        }
+
+        #reset-names-btn {
+            position: fixed;
+            top: 10px;
+            right: 130px;
+            background: #ff7675;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: white;
+            transition: all 0.2s ease;
+            z-index: 500;
+        }
+
+        #reset-names-btn:hover {
+            background: #d63031;
+        }
+
+        /* Admin panel styles */
+        #admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 2000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .admin-panel-content {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .admin-panel-header h2 {
+            color: #667eea;
+            margin: 0;
+        }
+
+        .admin-close-btn {
+            background: #ff7675;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .admin-close-btn:hover {
+            background: #d63031;
+        }
+
+        .admin-edit-group {
+            margin-bottom: 20px;
+        }
+
+        .admin-edit-group label {
+            display: block;
+            font-weight: bold;
+            color: #2d3436;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .admin-edit-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease;
+        }
+
+        .admin-edit-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .admin-save-btn, .admin-reset-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+        }
+
+        .admin-save-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .admin-save-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .admin-reset-btn {
+            background: #ff7675;
+            color: white;
+        }
+
+        .admin-reset-btn:hover {
+            background: #d63031;
+        }
     </style>
 </head>
 <body>
+
+    <button id="reset-names-btn">🔄 入力リセット</button>
+    <button id="admin-btn">⚙️ 管理</button>
 
     <h1>Wedding Human Bingo</h1>
     <p>タップして名前を入力！</p>
 
     <div class="grid" id="bingo-board">
-        <!-- 項目設定 -->
-        <div class="cell" onclick="setPlayer(this, '学校が同じ')">学校が同じ<div class="name-display"></div></div>
-        <div class="cell" onclick="setPlayer(this, '腕時計あり')">腕時計あり<div class="name-display"></div></div>
-        <div class="cell" onclick="setPlayer(this, '誕生月が同じ')">誕生月が同じ<div class="name-display"></div></div>
-        
-        <div class="cell" onclick="setPlayer(this, '仕事関係者')">仕事関係者<div class="name-display"></div></div>
-        <div class="cell active" id="free-cell">FREE<div class="name-display">主役の2人</div></div>
-        <div class="cell" onclick="setPlayer(this, 'iPhone以外')">iPhone以外<div class="name-display"></div></div>
-        
-        <div class="cell" onclick="setPlayer(this, '左利き')">左利き<div class="name-display"></div></div>
-        <div class="cell" onclick="setPlayer(this, '名刺あり')">名刺あり<div class="name-display"></div></div>
-        <div class="cell" onclick="setPlayer(this, '青色の小物')">青色の小物<div class="name-display"></div></div>
+        <!-- 動的に生成される -->
     </div>
 
     <div id="bingo-msg">🎉 BINGO! 🎉</div>
 
+    <!-- Admin Panel -->
+    <div id="admin-panel">
+        <div class="admin-panel-content">
+            <div class="admin-panel-header">
+                <h2>ビンゴパネル管理</h2>
+                <button class="admin-close-btn" id="admin-close">閉じる</button>
+            </div>
+            <div id="admin-form">
+                <!-- 動的に生成される -->
+            </div>
+            <div class="admin-buttons">
+                <button class="admin-save-btn" id="admin-save">保存して戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for name input -->
+    <div id="name-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title">名前を入力</h2>
+            <input type="text" id="name-input" placeholder="名前を入力してください">
+            <button id="submit-name">OK</button>
+        </div>
+    </div>
+
     <script>
-        function setPlayer(el, label) {
-            if(el.id === 'free-cell') return;
-            const name = prompt(`${label}の人の名前は？`);
-            if (name) {
-                el.querySelector('.name-display').innerText = name;
-                el.classList.add('active');
+        // Default panel labels
+        const defaultLabels = [
+            '学校が同じ',
+            '腕時計あり',
+            '誕生月が同じ',
+            '仕事関係者',
+            'iPhone以外',
+            '左利き',
+            '名刺あり',
+            '青色の小物'
+        ];
+
+        // Application State
+        const state = {
+            currentCell: null,
+            bingoTime: null,
+            lastBingoCount: 0,
+            panelLabels: [],
+            playerNames: [] // 各マスの名前を保持
+        };
+
+        // DOM Cache
+        const ui = {
+            board: document.getElementById('bingo-board'),
+            adminPanel: document.getElementById('admin-panel'),
+            adminForm: document.getElementById('admin-form'),
+            nameModal: document.getElementById('name-modal'),
+            nameInput: document.getElementById('name-input'),
+            modalTitle: document.getElementById('modal-title'),
+            bingoMsg: document.getElementById('bingo-msg'),
+            adminBtn: document.getElementById('admin-btn'),
+            resetNamesBtn: document.getElementById('reset-names-btn'),
+            adminClose: document.getElementById('admin-close'),
+            adminSave: document.getElementById('admin-save'),
+            submitName: document.getElementById('submit-name'),
+            closeModal: document.querySelector('.close-modal')
+        };
+
+        function init() {
+            // データの復元
+            const savedLabels = localStorage.getItem('bingoLabels');
+            state.panelLabels = savedLabels ? JSON.parse(savedLabels) : [...defaultLabels];
+            
+            const savedNames = localStorage.getItem('bingoNames');
+            state.playerNames = savedNames ? JSON.parse(savedNames) : Array(9).fill('');
+            if (!savedNames) state.playerNames[4] = '主役の2人';
+
+            const savedTime = localStorage.getItem('bingoTime');
+            state.bingoTime = savedTime ? new Date(savedTime) : null;
+            state.lastBingoCount = parseInt(localStorage.getItem('lastBingoCount')) || 0;
+            
+            renderBingoBoard();
+            setupEventListeners();
+            checkBingo(); // 保存された状態からビンゴ判定を復元
+        }
+
+        function saveState() {
+            localStorage.setItem('bingoLabels', JSON.stringify(state.panelLabels));
+            localStorage.setItem('bingoNames', JSON.stringify(state.playerNames));
+            localStorage.setItem('bingoTime', state.bingoTime ? state.bingoTime.toISOString() : '');
+            localStorage.setItem('lastBingoCount', state.lastBingoCount);
+        }
+
+        function renderBingoBoard() {
+            ui.board.innerHTML = '';
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                
+                const name = state.playerNames[i] || '';
+                
+                if (i === 4) {
+                    cell.id = 'free-cell';
+                    cell.classList.add('active');
+                    cell.innerHTML = `FREE<div class="name-display">${name || '主役の2人'}</div>`;
+                } else {
+                    const labelIndex = i < 4 ? i : i - 1;
+                    const label = state.panelLabels[labelIndex];
+                    cell.innerHTML = `${label}<div class="name-display">${name}</div>`;
+                    
+                    if (name) {
+                        cell.classList.add('active');
+                    }
+                    
+                    cell.addEventListener('click', () => openNameModal(cell, label));
+                }
+                ui.board.appendChild(cell);
+            }
+        }
+
+        function renderAdminForm() {
+            ui.adminForm.innerHTML = '';
+            const positionNames = ['左上', '上中央', '右上', '左中央', '右中央', '左下', '下中央', '右下'];
+            
+            state.panelLabels.forEach((label, index) => {
+                const group = document.createElement('div');
+                group.className = 'admin-edit-group';
+                group.innerHTML = `
+                    <label>パネル ${index + 1} (位置: ${positionNames[index]})</label>
+                    <input type="text" class="admin-input" data-index="${index}" value="${label}">
+                `;
+                ui.adminForm.appendChild(group);
+            });
+        }
+
+        function setupEventListeners() {
+            ui.adminBtn.addEventListener('click', () => {
+                ui.adminPanel.style.display = 'flex';
+                renderAdminForm();
+            });
+
+            ui.adminClose.addEventListener('click', () => ui.adminPanel.style.display = 'none');
+
+            ui.adminSave.addEventListener('click', () => {
+                saveAdminChanges();
+                ui.adminPanel.style.display = 'none';
+            });
+
+            ui.resetNamesBtn.addEventListener('click', () => {
+                if (confirm('入力された全ての名前をリセットしますか？')) {
+                    state.playerNames = Array(9).fill('');
+                    state.playerNames[4] = '主役の2人';
+                    state.lastBingoCount = 0;
+                    state.bingoTime = null;
+                    saveState();
+                    renderBingoBoard();
+                    checkBingo();
+                    alert('名前をリセットしました！パネル名は保持されます。');
+                }
+            });
+
+            ui.submitName.addEventListener('click', submitName);
+            ui.closeModal.addEventListener('click', closeModal);
+
+            window.addEventListener('click', function(event) {
+                if (event.target === ui.nameModal) closeModal();
+            });
+
+            ui.nameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') submitName();
+            });
+        }
+
+        function openNameModal(el, label) {
+            state.currentCell = el;
+            ui.modalTitle.innerText = `${label}の人の名前は？`;
+            ui.nameModal.style.display = 'block';
+            ui.nameInput.focus();
+        }
+
+        function closeModal() {
+            ui.nameModal.style.display = 'none';
+            ui.nameInput.value = '';
+            state.currentCell = null;
+        }
+
+        function submitName() {
+            const name = ui.nameInput.value.trim();
+            if (name && state.currentCell) {
+                const index = parseInt(state.currentCell.dataset.index);
+                state.playerNames[index] = name;
+                state.currentCell.querySelector('.name-display').innerText = name;
+                state.currentCell.classList.add('active');
+                saveState();
                 checkBingo();
             }
+            closeModal();
+        }
+
+        function saveAdminChanges() {
+            const inputs = document.querySelectorAll('.admin-input');
+            state.panelLabels = Array.from(inputs).map(input => input.value.trim() || 'パネル');
+            localStorage.setItem('bingoLabels', JSON.stringify(state.panelLabels));
+            saveState();
+            renderBingoBoard();
+            alert('設定を保存しました！');
         }
 
         function checkBingo() {
             const cells = document.querySelectorAll('.cell');
             const active = Array.from(cells).map(c => c.classList.contains('active'));
-            const lines = [
+            const winConditions = [
                 [0,1,2], [3,4,5], [6,7,8], // 横
                 [0,3,6], [1,4,7], [2,5,8], // 縦
                 [0,4,8], [2,4,6]           // 斜め
             ];
-            const isBingo = lines.some(line => line.every(index => active[index]));
-            if (isBingo) document.getElementById('bingo-msg').style.display = 'block';
+            
+            const bingoCount = winConditions.filter(line => line.every(index => active[index])).length;
+            
+            if (bingoCount > 0) {
+                if (bingoCount !== state.lastBingoCount) {
+                    state.bingoTime = new Date();
+                    state.lastBingoCount = bingoCount;
+                }
+                ui.bingoMsg.innerText = `🎉 ${bingoCount} BINGO! 🎉 (${state.bingoTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', second: '2-digit' })})`;
+                ui.bingoMsg.style.display = 'block';
+            } else {
+                ui.bingoMsg.style.display = 'none';
+                state.lastBingoCount = 0;
+                state.bingoTime = null;
+            }
+            saveState();
         }
+
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
