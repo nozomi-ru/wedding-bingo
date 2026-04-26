@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Bingo</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #fdfaf0; color: #333; margin: 0; padding: 20px; }
+        h1 { font-size: 1.5rem; color: #d4a373; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 400px; margin: 20px auto; }
+        .cell { background: #fff; border: 2px solid #d4a373; border-radius: 8px; aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; cursor: pointer; font-size: 0.75rem; overflow: hidden; }
+        .cell.active { background: #faedcd; border-color: #bc6c25; }
+        .name-display { font-weight: bold; color: #bc6c25; margin-top: 5px; font-size: 0.8rem; word-break: break-all; }
+        #bingo-msg { display: none; font-size: 2rem; font-weight: bold; color: #e63946; margin-top: 20px; animation: bounce 0.5s infinite alternate; }
+        @keyframes bounce { from { transform: scale(1); } to { transform: scale(1.1); } }
+    </style>
+</head>
+<body>
+
+    <h1>Wedding Human Bingo</h1>
+    <p>タップして名前を入力！</p>
+
+    <div class="grid" id="bingo-board">
+        <!-- 項目設定 -->
+        <div class="cell" onclick="setPlayer(this, '学校が同じ')">学校が同じ<div class="name-display"></div></div>
+        <div class="cell" onclick="setPlayer(this, '腕時計あり')">腕時計あり<div class="name-display"></div></div>
+        <div class="cell" onclick="setPlayer(this, '誕生月が同じ')">誕生月が同じ<div class="name-display"></div></div>
+        
+        <div class="cell" onclick="setPlayer(this, '仕事関係者')">仕事関係者<div class="name-display"></div></div>
+        <div class="cell active" id="free-cell">FREE<div class="name-display">主役の2人</div></div>
+        <div class="cell" onclick="setPlayer(this, 'iPhone以外')">iPhone以外<div class="name-display"></div></div>
+        
+        <div class="cell" onclick="setPlayer(this, '左利き')">左利き<div class="name-display"></div></div>
+        <div class="cell" onclick="setPlayer(this, '名刺あり')">名刺あり<div class="name-display"></div></div>
+        <div class="cell" onclick="setPlayer(this, '青色の小物')">青色の小物<div class="name-display"></div></div>
+    </div>
+
+    <div id="bingo-msg">🎉 BINGO! 🎉</div>
+
+    <script>
+        function setPlayer(el, label) {
+            if(el.id === 'free-cell') return;
+            const name = prompt(`${label}の人の名前は？`);
+            if (name) {
+                el.querySelector('.name-display').innerText = name;
+                el.classList.add('active');
+                checkBingo();
+            }
+        }
+
+        function checkBingo() {
+            const cells = document.querySelectorAll('.cell');
+            const active = Array.from(cells).map(c => c.classList.contains('active'));
+            const lines = [
+                [0,1,2], [3,4,5], [6,7,8], // 横
+                [0,3,6], [1,4,7], [2,5,8], // 縦
+                [0,4,8], [2,4,6]           // 斜め
+            ];
+            const isBingo = lines.some(line => line.every(index => active[index]));
+            if (isBingo) document.getElementById('bingo-msg').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
