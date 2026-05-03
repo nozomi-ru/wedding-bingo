@@ -4,225 +4,376 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wedding Human Bingo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=M+PLUS+Rounded+1c:wght@400;700&display=swap');
-
         :root {
-            --primary-red: #e84393;
-            --primary-pink: #ff74a4;
-            --soft-gold: #d4a373;
-            --bg-gradient: linear-gradient(135deg, #fff5f5 0%, #fff0f0 100%);
-            --text-color: #5d5d5d;
-            --shadow: 0 8px 20px rgba(255, 116, 164, 0.1);
-            --font-main: 'M PLUS Rounded 1c', sans-serif;
-            --font-deco: 'Dancing Script', cursive;
+            --color-bg: #FCFBF9;
+            --color-text: #1A1A1A;
+            --color-text-light: #4A4A4A;
+            --color-gold: #B4975A;
+            --color-border: #DCD7D0;
         }
 
         body {
-            font-family: var(--font-main);
-            text-align: center;
-            background: var(--bg-gradient);
-            color: var(--text-color);
+            font-family: 'Noto Serif JP', 'Yu Mincho', '游明朝', serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
             margin: 0;
-            padding: 20px;
+            padding: 20px 10px;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+        }
+
+        #main-box {
+            max-width: 480px;
+            width: 100%;
+            background: #FFFFFF;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 3.5em 1.5em 2em 1.5em;
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
+        #main-box::before {
+            content: '';
+            position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px solid #EBE7E0;
+            pointer-events: none;
+        }
+
+        .header-ornament {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-ornament::before,
+        .header-ornament::after {
+            content: '';
+            width: 30px;
+            height: 1.5px;
+            background-color: var(--color-gold);
+            margin: 0 15px;
+        }
+
+        .header-ornament svg {
+            width: 12px;
+            height: 12px;
+            fill: var(--color-gold);
+        }
+
         h1 {
-            font-family: var(--font-deco);
-            font-size: clamp(2.8rem, 12vw, 4rem);
-            color: var(--primary-red);
-            margin: 30px 0 5px;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 8vw, 2.6rem);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin: 0 0 8px 0;
+            color: var(--color-text);
             cursor: pointer;
             user-select: none;
-            filter: drop-shadow(2px 2px 0px white);
+            text-transform: uppercase;
         }
 
         .subtitle {
-            font-size: 0.75rem;
-            letter-spacing: 0.2rem;
-            color: var(--primary-pink);
-            margin-bottom: 20px;
-            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1em;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--color-gold);
+            margin-bottom: 2em;
         }
 
-        /* Rules Section */
+        /* --- 整理済み：ルールセクション --- */
         .rules-container {
-            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            margin-bottom: 25px;
-            padding: 15px;
-            box-shadow: var(--shadow);
-            border: 2px dashed #ffb3c6;
-            box-sizing: border-box;
-        }
-        .rules-title {
-            font-size: 1rem;
-            font-weight: bold;
-            color: var(--primary-red);
-            margin-bottom: 5px;
-            display: block;
-        }
-        .rules-content {
-            font-size: 0.8rem;
-            line-height: 1.5;
+            margin-bottom: 2.5em;
             text-align: left;
-            color: #777;
         }
-        .rules-content ul { margin: 5px 0; padding-left: 20px; }
 
-        /* Bingo Board */
+        .rules-step-card {
+            display: flex;
+            align-items: center;
+            background: #FAFAFA;
+            border: 1px solid var(--color-border);
+            padding: 12px 16px;
+            gap: 16px;
+            position: relative;
+        }
+
+        .step-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4em;
+            color: var(--color-gold);
+            font-weight: 600;
+            min-width: 35px;
+            position: relative;
+            text-align: center;
+        }
+
+        .step-num::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 24px;
+            background-color: var(--color-border);
+        }
+
+        .step-body {
+            flex: 1;
+        }
+
+        .step-title {
+            display: block;
+            font-family: 'Playfair Display', 'Noto Serif JP', serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--color-text);
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+
+        .step-title small {
+            font-size: 0.75em;
+            color: var(--color-gold);
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .step-desc {
+            display: block;
+            font-size: 0.8em;
+            color: var(--color-text-light);
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        /* --- ビンゴボード --- */
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            max-width: 450px;
+            gap: 8px;
             width: 100%;
-            perspective: 1000px;
         }
 
         .cell {
-            background: white;
-            border: 3px solid #ffecf2;
-            border-radius: 25px;
+            background: #F8F7F5;
+            border: 1px solid var(--color-border);
             aspect-ratio: 1/1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 8px;
+            padding: 6px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.85em;
             font-weight: 700;
-            box-shadow: var(--shadow);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             position: relative;
-            color: #888;
+            color: var(--color-text-light);
             line-height: 1.4;
-            overflow: hidden;
+            box-sizing: border-box;
+            text-align: center;
         }
 
         .cell.active {
-            background: #fffafa;
-            border-color: var(--primary-pink);
-            color: #555;
-            transform: scale(1.03);
+            background: #FFFFFF;
+            border-color: var(--color-gold);
+            color: var(--color-text);
+            box-shadow: 0 0 0 1px var(--color-gold) inset;
         }
 
-        .cell.resetting { transform: scale(0) rotate(30deg); opacity: 0; }
+        .cell.resetting { opacity: 0; transform: scale(0.95); }
 
         .cell#free-cell {
-            background: linear-gradient(135deg, #ff74a4 0%, #ffb3c6 100%);
-            color: white;
-            border: none;
-            cursor: default;
+            background: #FFFFFF;
+            border-color: var(--color-gold);
+            color: var(--color-gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25em;
+            font-weight: 600;
         }
-        .cell#free-cell::before { content: "💖"; font-size: 1.4rem; margin-bottom: 2px; }
 
         .name-display {
             font-weight: 700;
-            color: var(--primary-red);
-            margin-top: 6px;
-            font-size: 1.1rem;
+            color: var(--color-text);
+            margin-top: 8px;
+            font-size: 1.25em;
             word-break: break-all;
-            text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 2px 2px 5px rgba(232, 67, 147, 0.3);
+            border-bottom: 2px solid var(--color-gold);
+            padding: 0 4px 2px 4px;
+            display: inline-block;
+            font-family: 'Noto Serif JP', serif;
         }
 
-        /* Bingo Messages */
+        .cell:not(.active) .name-display { display: none; }
+
+        .cell#free-cell .name-display {
+            font-size: 0.8em;
+            margin-top: 6px;
+            border-bottom: none;
+            color: var(--color-text);
+            display: block;
+        }
+
+        /* --- ビンゴメッセージ --- */
         #bingo-msg {
             display: none;
-            margin: 25px 0;
-            background: white;
-            padding: 25px;
-            border-radius: 35px;
-            border: 3px solid #ff74a4;
-            box-shadow: 0 15px 30px rgba(255, 116, 164, 0.2);
-            width: 90%;
-            max-width: 400px;
-            animation: bingoPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 2em 0 0 0;
+            background: #FFFFFF;
+            padding: 1.5em;
+            border: 2px solid var(--color-gold);
+            width: 100%;
+            box-sizing: border-box;
+            animation: fadeIn 0.8s ease forwards;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .bingo-text {
-            font-size: 2.5rem;
-            font-family: var(--font-deco);
-            color: var(--primary-red);
+            font-size: 2.2em;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            color: var(--color-gold);
             margin: 0;
+            letter-spacing: 0.1em;
         }
-        .bingo-subtext { font-size: 0.95rem; color: #444; margin: 12px 0; font-weight: bold; }
-        .bingo-next-hint { font-size: 0.85rem; color: #ff74a4; font-weight: bold; animation: pulse 1.5s infinite; }
-        .bingo-time { font-size: 0.8rem; color: var(--soft-gold); margin-top: 10px; display: block; }
 
-        @keyframes pulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
-        @keyframes bingoPop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .bingo-time { 
+            font-size: 0.9em; 
+            color: var(--color-text-light); 
+            margin-top: 10px; 
+            display: block; 
+            font-weight: 600;
+        }
 
-        /* Actions */
-        .footer-actions { margin-top: auto; padding: 40px 0; }
+        .footer-actions { margin-top: 2.5em; }
         .btn-reset-trigger { 
-            background: white; border: 2px solid #ffecf2; color: #ffb3c6; 
-            padding: 10px 25px; border-radius: 40px; font-size: 0.75rem; 
-            cursor: pointer; font-weight: bold; transition: all 0.3s;
+            background: transparent; 
+            border: none; 
+            color: #888; 
+            padding: 10px; 
+            font-size: 0.85em; 
+            cursor: pointer; 
+            text-decoration: underline;
         }
 
-        /* Modals */
-        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 240, 240, 0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 35px; border-radius: 40px; width: 85%; max-width: 350px; border: 4px solid #ffecf2; text-align: center; position: relative; }
-        input[type="text"] { width: 100%; padding: 15px; border: 2px solid #ffecf2; background: #fffafa; border-radius: 20px; font-size: 1.1rem; margin: 20px 0; box-sizing: border-box; text-align: center; outline: none; font-family: inherit; }
-        .btn-main { background: linear-gradient(to right, #ff74a4, #ffb3c6); color: white; border: none; padding: 16px; border-radius: 20px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 5px 15px rgba(255, 116, 164, 0.3); }
-
-        #admin-panel { display: none; position: fixed; inset: 0; background: white; z-index: 3000; padding: 30px; overflow-y: auto; font-family: sans-serif; text-align: left; }
+        /* --- モーダル --- */
+        .modal { 
+            display: none; position: fixed; z-index: 2000; inset: 0; 
+            background: rgba(252, 251, 249, 0.92); backdrop-filter: blur(4px); 
+            align-items: center; justify-content: center; 
+        }
+        .modal-content { 
+            background: #FFFFFF; padding: 2.5em 2em; width: 90%; max-width: 360px; 
+            border: 1px solid var(--color-border); text-align: center; position: relative; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        .modal-content::before {
+            content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px solid #EBE7E0; pointer-events: none;
+        }
+        input[type="text"] { 
+            width: 100%; padding: 1em; border: 1px solid var(--color-border); 
+            background: #FAF9F7; font-size: 1.2em; margin: 1.5em 0; box-sizing: border-box; 
+            text-align: center; outline: none; font-family: inherit; font-weight: 600;
+        }
+        .btn-main { 
+            background-color: var(--color-text); color: #FFFFFF; border: none; 
+            padding: 1.2em; width: 100%; font-size: 1em; font-weight: 600; letter-spacing: 0.15em; 
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <h1 id="main-title">Wedding Bingo</h1>
-    <div class="subtitle">✨ Human Connection Game ✨</div>
-
-    <div class="rules-container">
-        <span class="rules-title">🎀 ルール 🎀</span>
-        <div class="rules-content">
-            <ul>
-                <li>制限時間内に、たくさんビンゴを目指そう！</li>
-                <li><strong>同じテーブルではない人</strong>に名前を書いてもらってね。</li>
-                <li>たくさん早くビンゴした人にプレゼントがあるかも🎁</li>
-            </ul>
+    <div id="main-box">
+        <div class="header-ornament">
+            <svg viewBox="0 0 24 24"><path d="M12 2L22 12L12 22L2 12L12 2Z"/></svg>
         </div>
-    </div>
+        <h1 id="main-title">Wedding Bingo</h1>
+        <div class="subtitle">Human Connection Game</div>
 
-    <div class="grid" id="bingo-board"></div>
+        <div class="rules-container">
+            <div class="rules-step-card">
+                <div class="step-num">01</div>
+                <div class="step-body">
+                    <span class="step-title">Greeting</span>
+                    <span class="step-desc">新郎新婦との関係性を話し、まずは自己紹介をします。</span>
+                </div>
+            </div>
+            
+            <div class="rules-step-card">
+                <div class="step-num">02</div>
+                <div class="step-body">
+                    <span class="step-title">Memory</span>
+                    <span class="step-desc">お一人一マス、お名前を刻んでいきます。</span>
+                </div>
+            </div>
+            
+            <div class="rules-step-card">
+                <div class="step-num">03</div>
+                <div class="step-body">
+                    <span class="step-title">Celebration</span>
+                    <span class="step-desc">一つでも多くの祝福のラインを完成させてください。</span>
+                </div>
+            </div>
+        </div>
 
-    <div id="bingo-msg">
-        <p class="bingo-text" id="bingo-count-text">🎉 1 BINGO! 🎉</p>
-        <span class="bingo-time" id="display-time"></span>
-    </div>
+        <div class="grid" id="bingo-board"></div>
 
-    <div class="footer-actions">
-        <button class="btn-reset-trigger" id="show-reset-confirm">やりなおす (Reset)</button>
+        <div id="bingo-msg">
+            <p class="bingo-text" id="bingo-count-text">1 BINGO</p>
+            <span class="bingo-time" id="display-time"></span>
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-reset-trigger" id="show-reset-confirm">リセットする (Reset)</button>
+        </div>
     </div>
 
     <!-- Modals -->
     <div id="name-modal" class="modal">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h3 id="modal-title" style="margin-top:0; color:var(--primary-pink)">おなまえ入力</h3>
-            <input type="text" id="name-input" placeholder="ここに入力..." maxlength="12">
-            <button class="btn-main" id="submit-name">決定！</button>
-            <button class="btn-reset-trigger" id="close-name-modal" style="border:none; margin-top:10px;">とじる</button>
+            <h3 id="modal-title" class="modal-title-text" style="margin-top:0; color:var(--color-gold);">お名前をご入力ください</h3>
+            <input type="text" id="name-input" placeholder="Name" maxlength="12">
+            <button class="btn-main" id="submit-name">登録する (SAVE)</button>
+            <button class="btn-reset-trigger" id="close-name-modal" style="margin-top:15px; width:100%;">閉じる (CLOSE)</button>
         </div>
     </div>
 
     <div id="confirm-modal" class="modal">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 style="color: var(--primary-red); margin-top:0">リセットする？</h2>
-            <p style="color:#888; font-size:0.9rem;">最初からやりなおしますか？</p>
-            <button class="btn-main" id="execute-reset" style="margin-bottom: 10px;">リセットする</button>
-            <button class="btn-reset-trigger" id="close-confirm-modal" style="border:none">やめる</button>
+            <h2 style="color:var(--color-text); margin-top:0; font-size:1.3em;">リセットの確認</h2>
+            <p style="color:var(--color-text-light); font-size:0.9em; line-height:1.6; margin-bottom:2em;">
+                すべての記録を消去し、<br>最初からやり直しますか？
+            </p>
+            <button class="btn-main" id="execute-reset" style="margin-bottom: 10px;">実行する (RESET)</button>
+            <button class="btn-reset-trigger" id="close-confirm-modal" style="width:100%;">キャンセル (CANCEL)</button>
         </div>
     </div>
 
-    <div id="admin-panel">
+    <div id="admin-panel" style="display: none; position: fixed; inset: 0; background: var(--color-bg); z-index: 3000; padding: 30px; overflow-y: auto; text-align: left;">
         <h2>Panel Settings</h2>
         <div id="admin-form"></div>
         <button class="btn-main" id="admin-save" style="margin-top:20px;">保存して閉じる</button>
@@ -231,43 +382,19 @@
     <script>
         "use strict";
 
-        // --- Configuration ---
-    const DEFAULT_LABELS = [
-        '血液型が自分と同じ人', 
-        '自分と同じ趣味の人', 
-        '今日お役目がある人(受付等)', // 少し短く、対象をぼかして探しやすく
-        '子育て奮闘中のパパ・ママ', 
-        '自分と同じ誕生月の人', 
-        '新幹線や飛行機で来た人', 
-        '同じ色のアイテムの人', // 「ドレスやネクタイ」などは入力時の説明に任せて短縮
-        '同じ飲み物を飲んでる人'   // 「飲み物」にするとお酒以外も含むので親切
-    ];
-        const WIN_PATTERNS = [
-            [0,1,2], [3,4,5], [6,7,8], // 横
-            [0,3,6], [1,4,7], [2,5,8], // 縦
-            [0,4,8], [2,4,6]           // 斜め
+        const DEFAULT_LABELS = [
+            '血液型が自分と同じ人', '自分と同じ趣味の人', '今日お役目があった人(受付等)',
+            '子育て奮闘中の人', '自分と同じ誕生月の人', '新幹線や飛行機で来た人', 
+            '同じ色のアイテムを持つ人', '同じ飲み物を飲んでる人'
         ];
+        const WIN_PATTERNS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
-        const state = {
-            names: [],
-            labels: [],
-            currentIdx: null,
-            clickCount: 0,
-            clickTimer: null
-        };
+        const state = { names: [], labels: [], currentIdx: null, clickCount: 0, clickTimer: null };
 
-        // --- Logic ---
         function loadData() {
-            try {
-                state.labels = JSON.parse(localStorage.getItem('bingoLabels')) || [...DEFAULT_LABELS];
-                state.names = JSON.parse(localStorage.getItem('bingoNames')) || Array(9).fill('');
-                if (!state.names[4]) state.names[4] = '主役の2人';
-            } catch (e) {
-                console.error("Data load error", e);
-                state.labels = [...DEFAULT_LABELS];
-                state.names = Array(9).fill('');
-                state.names[4] = '主役の2人';
-            }
+            state.labels = JSON.parse(localStorage.getItem('bingoLabels')) || [...DEFAULT_LABELS];
+            state.names = JSON.parse(localStorage.getItem('bingoNames')) || Array(9).fill('');
+            if (!state.names[4]) state.names[4] = '主役の2人';
         }
 
         function saveData() {
@@ -278,11 +405,9 @@
         function renderBoard() {
             const board = document.getElementById('bingo-board');
             board.innerHTML = '';
-            
             state.names.forEach((name, i) => {
                 const cell = document.createElement('div');
                 cell.className = 'cell' + (name ? ' active' : '');
-                
                 if (i === 4) {
                     cell.id = 'free-cell';
                     cell.innerHTML = `FREE<div class="name-display">${name}</div>`;
@@ -299,17 +424,12 @@
 
         function checkBingo() {
             const active = state.names.map(n => !!n);
-            const bingoLines = WIN_PATTERNS.filter(p => p.every(idx => active[idx]));
-            const count = bingoLines.length;
-            
+            const count = WIN_PATTERNS.filter(p => p.every(idx => active[idx])).length;
             const msgArea = document.getElementById('bingo-msg');
             const timeArea = document.getElementById('display-time');
-
             if (count > 0) {
-                document.getElementById('bingo-count-text').innerText = `🎉 ${count} BINGO! 🎉`;
-                if (!timeArea.innerText) {
-                    timeArea.innerText = `達成時刻: ${new Date().toLocaleTimeString('ja-JP')}`;
-                }
+                document.getElementById('bingo-count-text').innerText = `${count} BINGO`;
+                if (!timeArea.innerText) timeArea.innerText = `達成: ${new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}`;
                 msgArea.style.display = 'block';
             } else {
                 msgArea.style.display = 'none';
@@ -317,107 +437,59 @@
             }
         }
 
-        // --- UI Interactions ---
         function openModal(idx, label) {
             state.currentIdx = idx;
             document.getElementById('modal-title').innerText = label;
-            const input = document.getElementById('name-input');
-            input.value = state.names[idx];
+            document.getElementById('name-input').value = state.names[idx];
             document.getElementById('name-modal').style.display = 'flex';
-            setTimeout(() => input.focus(), 100);
+            setTimeout(() => document.getElementById('name-input').focus(), 100);
         }
 
-        function closeModals() {
-            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-            state.currentIdx = null;
-        }
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
 
         function saveName() {
             const val = document.getElementById('name-input').value.trim();
             if (state.currentIdx !== null) {
                 state.names[state.currentIdx] = val;
-                // 名前が変わったら時刻を更新させるためにクリア
                 document.getElementById('display-time').innerText = ''; 
-                saveData();
-                renderBoard();
-                closeModals();
+                saveData(); renderBoard(); closeModals();
             }
         }
 
-        async function handleReset() {
-            const cells = document.querySelectorAll('.cell');
-            cells.forEach((c, i) => setTimeout(() => c.classList.add('resetting'), i * 40));
-            
-            await new Promise(r => setTimeout(r, 600));
-            state.names = Array(9).fill('');
-            state.names[4] = '主役の2人';
-            document.getElementById('display-time').innerText = '';
-            saveData();
-            renderBoard();
-            closeModals();
+        function initEvents() {
+            document.getElementById('main-title').addEventListener('click', () => {
+                state.clickCount++;
+                if (state.clickCount >= 3) { openAdmin(); state.clickCount = 0; }
+                else { clearTimeout(state.clickTimer); state.clickTimer = setTimeout(() => state.clickCount = 0, 500); }
+            });
+            document.getElementById('submit-name').addEventListener('click', saveName);
+            document.getElementById('close-name-modal').addEventListener('click', closeModals);
+            document.getElementById('show-reset-confirm').addEventListener('click', () => document.getElementById('confirm-modal').style.display = 'flex');
+            document.getElementById('execute-reset').addEventListener('click', () => {
+                localStorage.clear(); loadData(); renderBoard(); closeModals();
+            });
+            document.getElementById('close-confirm-modal').addEventListener('click', closeModals);
+            document.getElementById('admin-save').addEventListener('click', saveAdmin);
+            window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModals(); });
         }
 
         function openAdmin() {
             const form = document.getElementById('admin-form');
             form.innerHTML = state.labels.map((l, i) => `
-                <div style="margin-bottom:12px;">
-                    <label style="font-size:12px;color:#999">マス ${i+1}</label><br>
-                    <input type="text" value="${l}" class="admin-edit-input" style="width:100%;padding:8px;box-sizing:border-box">
+                <div style="margin-bottom:15px;">
+                    <label>マス ${i+1}</label><br>
+                    <input type="text" value="${l}" class="admin-edit-input" style="width:100%; padding:8px;">
                 </div>
             `).join('');
             document.getElementById('admin-panel').style.display = 'block';
         }
 
         function saveAdmin() {
-            const inputs = document.querySelectorAll('.admin-edit-input');
-            state.labels = Array.from(inputs).map(i => i.value.trim() || '???');
-            saveData();
-            document.getElementById('admin-panel').style.display = 'none';
-            renderBoard();
+            state.labels = Array.from(document.querySelectorAll('.admin-edit-input')).map(i => i.value.trim() || '???');
+            saveData(); document.getElementById('admin-panel').style.display = 'none'; renderBoard();
         }
 
-        // --- Events ---
-        function initEvents() {
-            // Title Click (Admin)
-            document.getElementById('main-title').addEventListener('click', () => {
-                state.clickCount++;
-                clearTimeout(state.clickTimer);
-                if (state.clickCount >= 3) {
-                    openAdmin();
-                    state.clickCount = 0;
-                } else {
-                    state.clickTimer = setTimeout(() => { state.clickCount = 0; }, 500);
-                }
-            });
-
-            // Modal Clicks
-            document.querySelectorAll('.modal').forEach(m => {
-                m.addEventListener('click', closeModals);
-            });
-            document.getElementById('submit-name').addEventListener('click', saveName);
-            document.getElementById('close-name-modal').addEventListener('click', closeModals);
-            document.getElementById('close-confirm-modal').addEventListener('click', closeModals);
-            document.getElementById('admin-save').addEventListener('click', saveAdmin);
-            
-            // Reset Trigger
-            document.getElementById('show-reset-confirm').addEventListener('click', () => {
-                document.getElementById('confirm-modal').style.display = 'flex';
-            });
-            document.getElementById('execute-reset').addEventListener('click', handleReset);
-
-            // Keyboard
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeModals();
-                if (e.key === 'Enter' && document.getElementById('name-modal').style.display === 'flex') saveName();
-            });
-        }
-
-        // --- Start ---
-        window.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            initEvents();
-            renderBoard();
-        });
+        window.addEventListener('DOMContentLoaded', () => { loadData(); initEvents(); renderBoard(); });
     </script>
 </body>
 </html>
